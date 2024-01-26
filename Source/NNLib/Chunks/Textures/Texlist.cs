@@ -1,4 +1,5 @@
 ﻿using NNLib.Common;
+using System.Text;
 
 namespace NNLib.Chunks.Textures
 {
@@ -49,7 +50,37 @@ namespace NNLib.Chunks.Textures
             {
                 NNTexfile texfile = new NNTexfile();
 
-                texfile.Read(reader, firstChunkOffset);
+                uint type = reader.ReadUInt32();
+                uint namePos = reader.ReadUInt32();
+                texfile.Type = (NNTexfileType)Enum.ToObject(typeof(NNTexfileType), type);
+
+                ushort minFilter = reader.ReadUInt16();
+                texfile.MinFilter = (NNTexfileMinFilter)Enum.ToObject(typeof(NNTexfileMinFilter), minFilter);
+
+                ushort magFilter = reader.ReadUInt16();
+                texfile.MagFilter = (NNTexfileMagFilter)Enum.ToObject(typeof(NNTexfileMagFilter), magFilter);
+
+                texfile.GlobalIndex = reader.ReadUInt32();
+                texfile.Bank = reader.ReadUInt32();
+
+                // Reading name
+                // TODO: write a new method for reading null-terminated strings
+                // or use another binary reading/writing library
+                long position = reader.BaseStream.Position;
+                reader.BaseStream.Seek(firstChunkOffset + namePos, 0);
+
+                byte b = reader.ReadByte();
+                StringBuilder sb = new StringBuilder();
+                while (b != 0x00)
+                {
+                    sb.Append(Convert.ToChar(b));
+                    b = reader.ReadByte();
+                }
+
+                texfile.FileName = sb.ToString();
+
+                reader.BaseStream.Seek(position, 0);
+
                 Textures.Add(texfile);
             }
 
@@ -57,6 +88,47 @@ namespace NNLib.Chunks.Textures
             while (reader.BaseStream.Position != chunkEndPosition)
             {
                 reader.ReadByte();
+            }
+        }
+
+        // TODO: texfiles can have embedded texture data in them. 
+        // We should support them!
+        public void Write(BinaryWriter writer, uint firstChunkOffset)
+        {
+            List<long> nameOffsets = new List<long>();
+            foreach (NNTexfile texture in Textures)
+            {
+                writer.Write((uint)texture.Type);
+
+                nameOffsets.Add(writer.BaseStream.Position);
+                writer.Write(0); // name offset, placeholder
+
+                writer.Write((ushort)texture.MinFilter);
+                writer.Write((ushort)texture.MagFilter);
+
+                writer.Write(texture.GlobalIndex);
+                writer.Write(texture.Bank);
+            }
+
+            // File count (or name count)
+            writer.Write(Textures.Count);
+
+            // Unknown value
+            writer.Write(0x10);
+
+            // Writing names
+            for(int i = 0; i < Textures.Count; i++)
+            {
+                // Offsets
+                long pos = writer.BaseStream.Position;
+                writer.BaseStream.Position = nameOffsets[i];
+                writer.Write((uint)pos - firstChunkOffset);
+                writer.BaseStream.Position = pos;
+
+                // Name
+                foreach (char character in Textures[i].FileName)
+                    writer.Write(character);
+                writer.Write((byte)0);
             }
         }
     }

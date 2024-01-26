@@ -33,45 +33,6 @@ namespace NNLib.Chunks.Textures
         /// Unknown
         /// </summary>
         public uint Bank { get; set; }
-
-        /// <summary>
-        /// Reads a NNTexfile chunk from a file
-        /// </summary>
-        /// <param name="reader"><see cref="BinaryReader"> instance</param>
-        /// <param name="mainChunkPosition">Position of the first chunk in a file</param>
-        public void Read(BinaryReader reader, uint mainChunkPosition)
-        {
-            uint type = reader.ReadUInt32();
-            uint namePos = reader.ReadUInt32();
-            Type = (NNTexfileType)Enum.ToObject(typeof(NNTexfileType), type);
-
-            ushort minFilter = reader.ReadUInt16();
-            MinFilter = (NNTexfileMinFilter)Enum.ToObject(typeof(NNTexfileMinFilter), minFilter);
-
-            ushort magFilter = reader.ReadUInt16();
-            MagFilter = (NNTexfileMagFilter)Enum.ToObject(typeof(NNTexfileMagFilter), minFilter);
-
-            GlobalIndex = reader.ReadUInt32();
-            Bank = reader.ReadUInt32();
-            
-            // Reading name
-            // TODO: write a new method for reading null-terminated strings
-            // or use another binary reading/writing library
-            long position = reader.BaseStream.Position;
-            reader.BaseStream.Seek(mainChunkPosition + namePos, 0);
-
-            byte b = reader.ReadByte();
-            StringBuilder sb = new StringBuilder();
-            while (b != 0x00)
-            {
-                sb.Append(Convert.ToChar(b));
-                b = reader.ReadByte();
-            }
-
-            FileName = sb.ToString();
-
-            reader.BaseStream.Seek(position, 0);
-        }
     }
 
     /// <summary>
