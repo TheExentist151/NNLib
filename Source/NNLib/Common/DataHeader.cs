@@ -1,4 +1,6 @@
-﻿namespace NNLib.Common
+﻿using NNLib.IO;
+
+namespace NNLib.Common
 {
     /// <summary>
     /// Header for data chunks
@@ -25,7 +27,7 @@
             ChunkHeader = new NNChunkHeader();
         }
 
-        public void Read(BinaryReader reader)
+        public void Read(ExtendedBinaryReader reader)
         {
             ChunkHeader.Read(reader);
             MainDataOffset = reader.ReadUInt32();

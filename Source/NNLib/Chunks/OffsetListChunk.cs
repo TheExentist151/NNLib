@@ -1,4 +1,5 @@
 ﻿using NNLib.Common;
+using NNLib.IO;
 
 namespace NNLib.Chunks
 {
@@ -15,7 +16,7 @@ namespace NNLib.Chunks
             Offsets = new List<uint>();
         }
 
-        public void Read(BinaryReader reader)
+        public void Read(ExtendedBinaryReader reader)
         {
             Header.Read(reader);
             OffsetCount = reader.ReadUInt32();

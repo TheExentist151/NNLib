@@ -1,6 +1,7 @@
 ﻿using NNLib.Chunks;
 using NNLib.Chunks.Textures;
 using NNLib.Common;
+using NNLib.IO;
 
 namespace NNLib
 {
@@ -39,7 +40,7 @@ namespace NNLib
 
             using (FileStream fs = File.OpenRead(filename))
             {
-                using (BinaryReader reader = new BinaryReader(fs))
+                using (ExtendedBinaryReader reader = new ExtendedBinaryReader(fs))
                 {
                     InfoChunk.Read(reader);
 

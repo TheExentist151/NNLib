@@ -1,4 +1,5 @@
 ﻿using NNLib.Common;
+using NNLib.IO;
 
 namespace NNLib.Chunks
 {
@@ -44,7 +45,7 @@ namespace NNLib.Chunks
             Header = new NNChunkHeader();
         }
 
-        public void Read(BinaryReader reader)
+        public void Read(ExtendedBinaryReader reader)
         {
             Header.Read(reader);
             ChunkCount = reader.ReadUInt32();

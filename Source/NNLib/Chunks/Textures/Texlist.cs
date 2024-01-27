@@ -1,5 +1,5 @@
 ﻿using NNLib.Common;
-using System.Text;
+using NNLib.IO;
 
 namespace NNLib.Chunks.Textures
 {
@@ -32,9 +32,9 @@ namespace NNLib.Chunks.Textures
         /// <summary>
         /// Reads a NNTexlist chunk from a file
         /// </summary>
-        /// <param name="reader"><see cref="BinaryReader"> instance</param>
+        /// <param name="reader"><see cref="ExtendedBinaryReader"> instance</param>
         /// <param name="firstChunkOffset">Position of the first chunk in a file</param>
-        public void Read(BinaryReader reader, uint firstChunkOffset)
+        public void Read(ExtendedBinaryReader reader, uint firstChunkOffset)
         {
             uint chunkStartingPosition = (uint)reader.BaseStream.Position;
             uint texlistsStartingPosition = chunkStartingPosition + 16;
@@ -69,15 +69,7 @@ namespace NNLib.Chunks.Textures
                 long position = reader.BaseStream.Position;
                 reader.BaseStream.Seek(firstChunkOffset + namePos, 0);
 
-                byte b = reader.ReadByte();
-                StringBuilder sb = new StringBuilder();
-                while (b != 0x00)
-                {
-                    sb.Append(Convert.ToChar(b));
-                    b = reader.ReadByte();
-                }
-
-                texfile.FileName = sb.ToString();
+                texfile.FileName = reader.ReadNullTerminatedString();
 
                 reader.BaseStream.Seek(position, 0);
 
@@ -93,7 +85,7 @@ namespace NNLib.Chunks.Textures
 
         // TODO: texfiles can have embedded texture data in them. 
         // We should support them!
-        public void Write(BinaryWriter writer, uint firstChunkOffset)
+        public void Write(ExtendedBinaryWriter writer, uint firstChunkOffset)
         {
             List<long> nameOffsets = new List<long>();
             foreach (NNTexfile texture in Textures)
@@ -126,9 +118,7 @@ namespace NNLib.Chunks.Textures
                 writer.BaseStream.Position = pos;
 
                 // Name
-                foreach (char character in Textures[i].FileName)
-                    writer.Write(character);
-                writer.Write((byte)0);
+                writer.WriteNullTerminatedString(Textures[i].FileName);
             }
         }
     }
