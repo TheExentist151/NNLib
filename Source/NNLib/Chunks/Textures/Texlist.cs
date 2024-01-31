@@ -23,10 +23,21 @@ namespace NNLib.Chunks.Textures
         /// </summary>
         public uint TexfileCount { get; set; }
 
+        private NNChunkType m_ChunkType = NNChunkType.TexList;
+
         public NNTexlist()
         {
-            Header = new NNDataHeader();
             Textures = new List<NNTexfile>();
+        }
+
+        public NNTexlist(NNDataHeader header)
+        {
+            if (header.ChunkHeader.ChunkType == m_ChunkType)
+            {
+                Header = header;
+                Textures = new List<NNTexfile>();
+            }
+            else throw new ArgumentException($"The provided chunk header has and invalid chunk type. Expected: {m_ChunkType}, got: {header.ChunkHeader.ChunkType}");
         }
 
         /// <summary>
@@ -37,8 +48,14 @@ namespace NNLib.Chunks.Textures
         public void Read(ExtendedBinaryReader reader, uint firstChunkOffset)
         {
             uint chunkStartingPosition = (uint)reader.BaseStream.Position;
+            if (Header == null)
+            {
+                Header = new NNDataHeader();
+                Header.Read(reader);
+            }
+            else chunkStartingPosition -= 16;
+
             uint texlistsStartingPosition = chunkStartingPosition + 16;
-            Header.Read(reader);
             uint chunkEndPosition = chunkStartingPosition + Header.ChunkHeader.NextChunkOffset;
 
             // Texfile count

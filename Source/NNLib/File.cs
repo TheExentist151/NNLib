@@ -18,6 +18,11 @@ namespace NNLib
         public NNTexlist Texlist;
 
         /// <summary>
+        /// The NNNodeNameList chunk
+        /// </summary>
+        public NNNodeNameList NodeNameList;
+
+        /// <summary>
         /// The OffsetList Chunk
         /// </summary>
         public NNOffsetListChunk OffsetList;
@@ -52,8 +57,7 @@ namespace NNLib
                         switch (header.ChunkHeader.ChunkType)
                         {
                             case NNChunkType.TexList:
-                                reader.BaseStream.Seek(-16, SeekOrigin.Current);
-                                Texlist = new NNTexlist();
+                                Texlist = new NNTexlist(header);
                                 Texlist.Read(reader, InfoChunk.FirstChunkOffset);
                                 break;
 
