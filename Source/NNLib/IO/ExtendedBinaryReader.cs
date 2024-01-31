@@ -102,15 +102,31 @@ namespace NNLib.IO
                     (ulong)data[3] << 24 | (ulong)data[2] << 16 | (ulong)data[1] << 8 | (ulong)data[0];
         }
 
-        // TODO: test this
+        public Vector2 ReadVector2()
+        {
+            float X = ReadSingle();
+            float Y = ReadSingle();
+
+            return new Vector2(X, Y);
+        }
+
         public Vector3 ReadVector3()
         {
             float X = ReadSingle();
             float Y = ReadSingle();
             float Z = ReadSingle();
 
-            Vector3 result = new Vector3(X, Y, Z);
-            return result;
+            return new Vector3(X, Y, Z);
+        }
+
+        public Vector4 ReadVector4()
+        {
+            float X = ReadSingle();
+            float Y = ReadSingle();
+            float Z = ReadSingle();
+            float W = ReadSingle();
+
+            return new Vector4(X, Y, Z, W);
         }
     }
 }

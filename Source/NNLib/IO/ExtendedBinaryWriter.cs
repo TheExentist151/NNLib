@@ -158,12 +158,27 @@ namespace NNLib.IO
             Write(src.Z);
         }
 
+        public void Write(Vector2 src)
+        {
+            Write(src.X);
+            Write(src.Y);
+        }
+
+        public void Write(Vector4 src)
+        {
+            Write(src.X);
+            Write(src.Y);
+            Write(src.Z);
+            Write(src.W);
+        }
+
         public void WriteNullTerminatedString(string src)
         {
             foreach (char character in src)
                 Write(character);
             Write((byte)0x00);
         }
+
 
         // TODO: writing normal strings
     }
