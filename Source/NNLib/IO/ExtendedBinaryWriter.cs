@@ -179,6 +179,11 @@ namespace NNLib.IO
             Write((byte)0x00);
         }
 
+        public void WriteNulls(uint count)
+        {
+            for (int i = 0; i < count; i++)
+                Write((byte)0x00);
+        }
 
         // TODO: writing normal strings
     }
