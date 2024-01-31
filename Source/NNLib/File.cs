@@ -57,7 +57,7 @@ namespace NNLib
                                 Texlist.Read(reader, InfoChunk.FirstChunkOffset);
                                 break;
 
-                            default: reader.ReadBytes((int)header.ChunkHeader.NextChunkOffset - 16); break; // Skipping unsupported chunk
+                            default: reader.BaseStream.Seek(header.ChunkHeader.NextChunkOffset - 8, SeekOrigin.Current); break; // Skipping unsupported chunk
                         }
 
                         // Skipping padding until the 'N' letter is found
