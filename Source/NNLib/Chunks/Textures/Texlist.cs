@@ -39,7 +39,7 @@ namespace NNLib.Chunks.Textures
             uint chunkStartingPosition = (uint)reader.BaseStream.Position;
             uint texlistsStartingPosition = chunkStartingPosition + 16;
             Header.Read(reader);
-            uint chunkEndPosition = chunkStartingPosition + Header.ChunkHeader.ChunkSize;
+            uint chunkEndPosition = chunkStartingPosition + Header.ChunkHeader.NextChunkOffset;
 
             // Texfile count
             reader.BaseStream.Seek(chunkStartingPosition + Header.MainDataOffset, 0);

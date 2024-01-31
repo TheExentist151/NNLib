@@ -1,5 +1,6 @@
 ﻿using NNLib;
 using NNLib.Chunks.Textures;
+using NNLib.IO;
 
 namespace NNViewer
 {
@@ -18,7 +19,7 @@ namespace NNViewer
 
             Console.WriteLine("Info chunk information:");
             Console.WriteLine($"Platform: \t\t{file.InfoChunk.Header.Platform}");
-            Console.WriteLine($"Chunk size: \t\t{file.InfoChunk.Header.ChunkSize}");
+            Console.WriteLine($"Next chunk offset: \t{file.InfoChunk.Header.NextChunkOffset}");
             Console.WriteLine($"Chunk count: \t\t{file.InfoChunk.ChunkCount}");
             Console.WriteLine($"First chunk offset: \t{file.InfoChunk.FirstChunkOffset}");
             Console.WriteLine($"Chunks size: \t\t{file.InfoChunk.ChunksSize}");

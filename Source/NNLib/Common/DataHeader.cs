@@ -33,5 +33,12 @@ namespace NNLib.Common
             MainDataOffset = reader.ReadUInt32();
             Version = reader.ReadUInt32();
         }
+
+        public void Write(ExtendedBinaryWriter writer)
+        {
+            ChunkHeader.Write(writer);
+            writer.Write(MainDataOffset);
+            writer.Write(Version);
+        }
     }
 }
