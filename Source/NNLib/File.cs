@@ -60,6 +60,11 @@ namespace NNLib
                                 Texlist = new NNTexlist(header);
                                 Texlist.Read(reader, InfoChunk.FirstChunkOffset);
                                 break;
+                            case NNChunkType.NodeNameList:
+                                reader.BaseStream.Seek(-16, SeekOrigin.Current);
+                                NodeNameList = new NNNodeNameList();
+                                NodeNameList.Read(reader, InfoChunk.FirstChunkOffset);
+                                break;
 
                             default: reader.BaseStream.Seek(header.ChunkHeader.NextChunkOffset - 8, SeekOrigin.Current); break; // Skipping unsupported chunk
                         }

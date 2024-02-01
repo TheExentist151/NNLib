@@ -1,6 +1,6 @@
 ﻿using NNLib;
+using NNLib.Chunks;
 using NNLib.Chunks.Textures;
-using NNLib.IO;
 
 namespace NNViewer
 {
@@ -43,6 +43,18 @@ namespace NNViewer
                     Console.WriteLine($"Global index: \t\t{texture.GlobalIndex}");
                     Console.WriteLine($"Bank: \t\t\t{texture.Bank}");
                     index++;
+                }
+                Console.WriteLine();
+            }
+
+            if (file.NodeNameList != null)
+            {
+                Console.WriteLine("Node name list chunk information: \n");
+                Console.WriteLine($"Node names count: \t{file.NodeNameList.NodeNames.Count}");
+                Console.WriteLine($"Node sorting type: \t{file.NodeNameList.SortType}");
+                foreach (NNNodeName name in file.NodeNameList.NodeNames)
+                {
+                    Console.WriteLine($"Node {name.NodeIndex}: \t\t{name.Name}");
                 }
             }
 
